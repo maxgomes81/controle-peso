@@ -1,7 +1,7 @@
 {
   "name": "Controle de Peso",
   "short_name": "Peso",
-  "start_url": "./index.html",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#0b1220",
