@@ -1071,3 +1071,20 @@ els.installBtn.addEventListener("click", async () => {
   els.dateInput.value = isoToday();
   await refresh(true);
 })();
+// ---------- tabs (layout mobile por ícones)
+function setActiveTab(tab) {
+  document.querySelectorAll(".tabbtn").forEach((b) => {
+    b.classList.toggle("active", b.getAttribute("data-tab") === tab);
+  });
+  document.querySelectorAll(".view").forEach((v) => v.classList.remove("active"));
+  const view = document.getElementById(`view-${tab}`);
+  if (view) view.classList.add("active");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+document.querySelectorAll(".tabbtn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const tab = btn.getAttribute("data-tab");
+    setActiveTab(tab);
+  });
+});

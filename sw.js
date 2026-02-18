@@ -1,4 +1,4 @@
-const CACHE = "peso-cache-v4";
+const CACHE = "peso-cache-v5-layout";
 const ASSETS = [
   "./",
   "./index.html",

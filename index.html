@@ -2,318 +2,285 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Controle de Peso</title>
   <meta name="theme-color" content="#111827" />
   <link rel="icon" href="icons/icon-192.png">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="stylesheet" href="styles.css" />
 </head>
-
 <body>
-  <header class="header">
-    <div>
-      <h1>Controle de Peso</h1>
-      <p class="muted">Offline • Instalável • Perfis • Calorias • Lembretes</p>
+  <!-- App bar (topo) -->
+  <header class="appbar">
+    <div class="brand">
+      <div class="brand-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M7 4h10a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3Zm0 2a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H7Z"/></svg>
+      </div>
+      <div>
+        <div class="brand-title">Controle de Peso</div>
+        <div class="brand-sub">Registro • Perfil • Calorias • Alertas</div>
+      </div>
     </div>
-    <div class="row">
-      <select id="profileSelect" class="select" aria-label="Selecionar perfil"></select>
-      <button id="manageProfilesBtn" class="btn secondary" type="button">Perfis</button>
-      <button id="installBtn" class="btn secondary hidden" type="button">Instalar</button>
+
+    <div class="appbar-right">
+      <select id="profileSelect" class="select compact" aria-label="Selecionar perfil"></select>
+      <button id="manageProfilesBtn" class="iconbtn" type="button" title="Perfis">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Zm0-2a3 3 0 1 1 3-3 3 3 0 0 1-3 3Zm0 4c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Zm-6 5c.56-1.78 3.1-3 6-3s5.44 1.22 6 3Z"/></svg>
+      </button>
+      <button id="installBtn" class="iconbtn hidden" type="button" title="Instalar">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.14 12.94a7.85 7.85 0 0 0 .06-.94 7.85 7.85 0 0 0-.06-.94l2-1.55a.5.5 0 0 0 .12-.64l-1.9-3.29a.5.5 0 0 0-.6-.22l-2.35.95a7.45 7.45 0 0 0-1.63-.94L14.5 2.5a.5.5 0 0 0-.5-.5h-3.8a.5.5 0 0 0-.5.5l-.3 2.81a7.45 7.45 0 0 0-1.63.94l-2.35-.95a.5.5 0 0 0-.6.22L2.92 8.81a.5.5 0 0 0 .12.64l2 1.55a7.85 7.85 0 0 0-.06.94c0 .32.02.63.06.94l-2 1.55a.5.5 0 0 0-.12.64l1.9 3.29a.5.5 0 0 0 .6.22l2.35-.95c.5.38 1.05.7 1.63.94l.3 2.81a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5l.3-2.81c.58-.24 1.13-.56 1.63-.94l2.35.95a.5.5 0 0 0 .6-.22l1.9-3.29a.5.5 0 0 0-.12-.64l-2-1.55ZM12 15.5A3.5 3.5 0 1 1 15.5 12 3.5 3.5 0 0 1 12 15.5Z"/></svg>
+      </button>
     </div>
   </header>
 
-  <main class="container">
-    <section class="card">
-      <div class="row between">
-        <h2>Novo registro</h2>
-        <div class="muted small" id="activeProfileLabel"></div>
-      </div>
+  <main class="shell">
 
-      <form id="entryForm" class="grid" autocomplete="off">
-        <label>
-          Data
-          <input id="dateInput" type="date" required />
-        </label>
-
-        <label>
-          Peso (kg)
-          <input id="weightInput" type="number" inputmode="decimal" step="0.1" min="20" max="400" placeholder="Ex.: 86.4" required />
-        </label>
-
-        <label>
-          Cintura (cm) <span class="muted small">(opcional)</span>
-          <input id="waistInput" type="number" inputmode="decimal" step="0.1" min="30" max="200" placeholder="Ex.: 92.5" />
-        </label>
-
-        <label>
-          % Gordura <span class="muted small">(opcional)</span>
-          <input id="bfInput" type="number" inputmode="decimal" step="0.1" min="1" max="80" placeholder="Ex.: 18.2" />
-        </label>
-
-        <label>
-          Treino do dia <span class="muted small">(opcional)</span>
-          <select id="workoutInput" class="select">
-            <option value="">—</option>
-            <option value="Descanso">Descanso</option>
-            <option value="Musculação">Musculação</option>
-            <option value="Cardio">Cardio</option>
-            <option value="HIIT">HIIT</option>
-            <option value="Outro">Outro</option>
-          </select>
-        </label>
-
-        <label>
-          Duração (min) <span class="muted small">(opcional)</span>
-          <input id="workoutMinInput" type="number" inputmode="numeric" step="1" min="0" max="600" placeholder="Ex.: 45" />
-        </label>
-
-        <label class="span2">
-          Observação (opcional)
-          <input id="noteInput" type="text" maxlength="120" placeholder="Ex.: jejum, treino, retenção..." />
-        </label>
-
-        <div class="row span2">
-          <button class="btn" type="submit">Salvar</button>
-          <button id="clearBtn" class="btn secondary" type="button">Limpar</button>
-        </div>
-      </form>
-    </section>
-
-    <section class="card">
-      <h2>Cadastro do perfil</h2>
-      <form id="profileForm" class="grid" autocomplete="off">
-        <label>
-          Nome
-          <input id="nameInput" type="text" maxlength="40" placeholder="Ex.: Maxwell" required />
-        </label>
-
-        <label>
-          Idade (anos)
-          <input id="ageInput" type="number" inputmode="numeric" step="1" min="10" max="120" placeholder="Ex.: 35" />
-        </label>
-
-        <label>
-          Sexo <span class="muted small">(para cálculo)</span>
-          <select id="sexInput" class="select">
-            <option value="">—</option>
-            <option value="M">Masculino</option>
-            <option value="F">Feminino</option>
-            <option value="X">Outro/Prefiro não informar</option>
-          </select>
-        </label>
-
-        <label>
-          Gênero <span class="muted small">(opcional)</span>
-          <select id="genderInput" class="select">
-            <option value="">—</option>
-            <option value="Masculino">Masculino</option>
-            <option value="Feminino">Feminino</option>
-            <option value="Não-binário">Não-binário</option>
-            <option value="Outro">Outro</option>
-            <option value="Prefiro não informar">Prefiro não informar</option>
-          </select>
-        </label>
-
-        <label>
-          Raça/Cor <span class="muted small">(opcional)</span>
-          <select id="raceInput" class="select">
-            <option value="">—</option>
-            <option value="Branca">Branca</option>
-            <option value="Preta">Preta</option>
-            <option value="Parda">Parda</option>
-            <option value="Amarela">Amarela</option>
-            <option value="Indígena">Indígena</option>
-            <option value="Prefiro não informar">Prefiro não informar</option>
-          </select>
-        </label>
-
-        <label>
-          Telefone <span class="muted small">(opcional)</span>
-          <input id="phoneInput" type="tel" maxlength="30" placeholder="Ex.: (69) 99999-9999" />
-        </label>
-
-        <label class="span2">
-          Endereço <span class="muted small">(opcional)</span>
-          <input id="addressInput" type="text" maxlength="120" placeholder="Ex.: Rua X, nº Y, Bairro, Cidade/UF" />
-        </label>
-
-        <label>
-          Altura (cm)
-          <input id="heightInput" type="number" inputmode="numeric" step="1" min="80" max="250" placeholder="Ex.: 175" />
-        </label>
-
-        <label>
-          Meta (kg)
-          <input id="goalInput" type="number" inputmode="decimal" step="0.1" min="20" max="400" placeholder="Ex.: 80.0" />
-        </label>
-
-        <label>
-          Nível de atividade
-          <select id="activityInput" class="select">
-            <option value="1.2">Sedentário (1.2)</option>
-            <option value="1.375">Leve (1.375)</option>
-            <option value="1.55" selected>Moderado (1.55)</option>
-            <option value="1.725">Alto (1.725)</option>
-            <option value="1.9">Muito alto (1.9)</option>
-          </select>
-        </label>
-
-        <label>
-          Opção de treino
-          <select id="trainingStyleInput" class="select">
-            <option value="">—</option>
-            <option value="Musculação">Musculação</option>
-            <option value="Hipertrofia">Hipertrofia</option>
-            <option value="Cardio">Cardio</option>
-            <option value="Misto">Misto</option>
-            <option value="HIIT">HIIT</option>
-          </select>
-        </label>
-
-        <div class="span2">
-          <div class="row between">
-            <div>
-              <div class="label">Dias de treino</div>
-              <div class="muted small">Usado para gerar lembretes (calendário).</div>
-            </div>
+    <!-- Tela: Registro -->
+    <section class="view active" id="view-entry" aria-label="Registro">
+      <div class="card hero">
+        <div class="card-head">
+          <div class="card-title">
+            <span class="i" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M7 4h10a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3Zm0 2a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H7Z"/></svg>
+            </span>
+            <span>Novo registro</span>
           </div>
-          <div class="days" id="daysBox"></div>
+          <div class="muted small" id="activeProfileLabel"></div>
         </div>
 
-        <div class="row span2 wrap">
-          <button id="saveProfileBtn" class="btn secondary" type="submit">Salvar cadastro</button>
-          <button id="exportCsvBtn" class="btn secondary" type="button">Exportar CSV (perfil)</button>
-          <button id="exportJsonBtn" class="btn secondary" type="button">Backup JSON (tudo)</button>
-          <button id="importBtn" class="btn secondary" type="button">Importar JSON</button>
-          <input id="importFile" type="file" accept="application/json" class="hidden" />
-        </div>
-        <p class="muted small span2">Os dados ficam no seu dispositivo (IndexedDB). Backup JSON restaura tudo. “Raça/Cor” é apenas cadastro e não entra nos cálculos.</p>
-      </form>
-    </section>
-
-    <section class="card">
-      <h2>Calorias (estimativa)</h2>
-      <div class="stats">
-        <div class="stat">
-          <div class="label">BMR (repouso)</div>
-          <div class="value" id="bmr">—</div>
-        </div>
-        <div class="stat">
-          <div class="label">TDEE (manutenção)</div>
-          <div class="value" id="tdee">—</div>
-        </div>
-        <div class="stat">
-          <div class="label">Perder ~0,5 kg/sem</div>
-          <div class="value" id="cut">—</div>
-        </div>
-        <div class="stat">
-          <div class="label">Perder ~0,25 kg/sem</div>
-          <div class="value" id="cutLite">—</div>
-        </div>
-        <div class="stat">
-          <div class="label">Ganhar ~0,25 kg/sem</div>
-          <div class="value" id="bulkLite">—</div>
-        </div>
-        <div class="stat">
-          <div class="label">Ganhar ~0,5 kg/sem</div>
-          <div class="value" id="bulk">—</div>
-        </div>
+        <form id="entryForm" class="grid" autocomplete="off">
+          <label>Data<input id="dateInput" type="date" required /></label>
+          <label>Peso (kg)<input id="weightInput" type="number" inputmode="decimal" step="0.1" min="20" max="400" placeholder="Ex.: 86.4" required /></label>
+          <label>Cintura (cm) <span class="muted small">(opcional)</span><input id="waistInput" type="number" inputmode="decimal" step="0.1" min="30" max="200" placeholder="Ex.: 92.5" /></label>
+          <label>% Gordura <span class="muted small">(opcional)</span><input id="bfInput" type="number" inputmode="decimal" step="0.1" min="1" max="80" placeholder="Ex.: 18.2" /></label>
+          <label>Treino do dia <span class="muted small">(opcional)</span>
+            <select id="workoutInput" class="select">
+              <option value="">—</option>
+              <option value="Descanso">Descanso</option>
+              <option value="Musculação">Musculação</option>
+              <option value="Cardio">Cardio</option>
+              <option value="HIIT">HIIT</option>
+              <option value="Outro">Outro</option>
+            </select>
+          </label>
+          <label>Duração (min) <span class="muted small">(opcional)</span><input id="workoutMinInput" type="number" inputmode="numeric" step="1" min="0" max="600" placeholder="Ex.: 45" /></label>
+          <label class="span2">Observação (opcional)<input id="noteInput" type="text" maxlength="120" placeholder="Ex.: jejum, treino, retenção..." /></label>
+          <div class="row span2">
+            <button class="btn" type="submit">Salvar</button>
+            <button id="clearBtn" class="btn secondary" type="button">Limpar</button>
+          </div>
+        </form>
       </div>
-      <p class="muted small">
-        Estimativas baseadas em Mifflin-St Jeor + fator de atividade. Não é aconselhamento médico.
-      </p>
-    </section>
 
-    <section class="card">
-      <h2>Lembretes (notificações)</h2>
-      <p class="muted small">
-        Em PWA no Android, notificação automática diária pode falhar por restrições do sistema. O jeito mais confiável aqui é gerar um <b>arquivo de calendário (.ics)</b> com alertas no Google Agenda.
-      </p>
-
-      <div class="grid">
-        <label>
-          Horário do lembrete de pesagem
-          <input id="weighTime" type="time" value="07:00" />
-        </label>
-
-        <label>
-          Horário do lembrete de treino
-          <input id="trainTime" type="time" value="18:00" />
-        </label>
-
-        <div class="row span2 wrap">
-          <button id="icsWeighBtn" class="btn secondary" type="button">Gerar .ICS Pesagem (diário)</button>
-          <button id="icsTrainBtn" class="btn secondary" type="button">Gerar .ICS Treino (semanal)</button>
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">
+            <span class="i" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 2s4 4 4 8a4 4 0 1 1-8 0c0-4 4-8 4-8Zm0 10a2 2 0 0 0 2-2c0-1.33-.88-3.17-2-4.5-1.12 1.33-2 3.17-2 4.5a2 2 0 0 0 2 2Zm6 3c0 3.87-2.69 7-6 7s-6-3.13-6-7c0-2.2 1.1-4.36 2.85-5.93.02 3.27 2.12 5.93 4.15 5.93s4.13-2.66 4.15-5.93C16.9 10.64 18 12.8 18 15Z"/></svg>
+            </span>
+            <span>Resumo rápido</span>
+          </div>
+          <span class="muted small">últimos dados</span>
         </div>
+
+        <div class="stats">
+          <div class="stat"><div class="label">Último peso</div><div class="value" id="lastWeight">—</div></div>
+          <div class="stat"><div class="label">Variação</div><div class="value" id="delta">—</div></div>
+          <div class="stat"><div class="label">Média 7 dias</div><div class="value" id="avg7">—</div></div>
+          <div class="stat"><div class="label">Tendência (7d)</div><div class="value" id="trend7">—</div></div>
+          <div class="stat"><div class="label">IMC</div><div class="value" id="bmi">—</div></div>
+          <div class="stat"><div class="label">Meta</div><div class="value" id="goal">—</div></div>
+          <div class="stat"><div class="label">Falta p/ meta</div><div class="value" id="toGoal">—</div></div>
+          <div class="stat"><div class="label">Cintura</div><div class="value" id="waistLast">—</div></div>
+          <div class="stat"><div class="label">% Gordura</div><div class="value" id="bfLast">—</div></div>
+        </div>
+
+        <canvas id="chart" height="180" aria-label="Gráfico do peso (últimos 90 registros)"></canvas>
+        <p class="muted small">Linhas: <b>Peso</b> • <b>Média móvel 7 dias</b> • <b>Meta</b>.</p>
       </div>
     </section>
 
-    <section class="card">
-      <h2>Resumo</h2>
-      <div class="stats">
-        <div class="stat">
-          <div class="label">Último peso</div>
-          <div class="value" id="lastWeight">—</div>
+    <!-- Tela: Perfil -->
+    <section class="view" id="view-profile" aria-label="Perfil">
+      <div class="card hero">
+        <div class="card-head">
+          <div class="card-title">
+            <span class="i" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Zm0-2a3 3 0 1 1 3-3 3 3 0 0 1-3 3Zm0 4c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Zm-6 5c.56-1.78 3.1-3 6-3s5.44 1.22 6 3Z"/></svg></span>
+            <span>Cadastro do perfil</span>
+          </div>
+          <span class="muted small">dados do perfil selecionado</span>
         </div>
-        <div class="stat">
-          <div class="label">Variação</div>
-          <div class="value" id="delta">—</div>
-        </div>
-        <div class="stat">
-          <div class="label">Média 7 dias</div>
-          <div class="value" id="avg7">—</div>
-        </div>
-        <div class="stat">
-          <div class="label">Tendência (7d)</div>
-          <div class="value" id="trend7">—</div>
-        </div>
-        <div class="stat">
-          <div class="label">IMC</div>
-          <div class="value" id="bmi">—</div>
-        </div>
-        <div class="stat">
-          <div class="label">Meta</div>
-          <div class="value" id="goal">—</div>
-        </div>
-        <div class="stat">
-          <div class="label">Falta p/ meta</div>
-          <div class="value" id="toGoal">—</div>
-        </div>
-        <div class="stat">
-          <div class="label">Cintura</div>
-          <div class="value" id="waistLast">—</div>
-        </div>
-        <div class="stat">
-          <div class="label">% Gordura</div>
-          <div class="value" id="bfLast">—</div>
-        </div>
-      </div>
 
-      <canvas id="chart" height="180" aria-label="Gráfico do peso (últimos 90 registros)"></canvas>
-      <p class="muted small">
-        Linhas: <b>Peso</b> + <b>Média móvel 7 dias</b> + <b>Meta</b> (se definida).
-      </p>
+        <form id="profileForm" class="grid" autocomplete="off">
+          <label>Nome<input id="nameInput" type="text" maxlength="40" placeholder="Ex.: Maxwell" required /></label>
+          <label>Idade (anos)<input id="ageInput" type="number" inputmode="numeric" step="1" min="10" max="120" placeholder="Ex.: 35" /></label>
+          <label>Sexo <span class="muted small">(para cálculo)</span>
+            <select id="sexInput" class="select">
+              <option value="">—</option>
+              <option value="M">Masculino</option>
+              <option value="F">Feminino</option>
+              <option value="X">Outro/Prefiro não informar</option>
+            </select>
+          </label>
+          <label>Gênero <span class="muted small">(opcional)</span>
+            <select id="genderInput" class="select">
+              <option value="">—</option>
+              <option value="Masculino">Masculino</option>
+              <option value="Feminino">Feminino</option>
+              <option value="Não-binário">Não-binário</option>
+              <option value="Outro">Outro</option>
+              <option value="Prefiro não informar">Prefiro não informar</option>
+            </select>
+          </label>
+          <label>Raça/Cor <span class="muted small">(opcional)</span>
+            <select id="raceInput" class="select">
+              <option value="">—</option>
+              <option value="Branca">Branca</option>
+              <option value="Preta">Preta</option>
+              <option value="Parda">Parda</option>
+              <option value="Amarela">Amarela</option>
+              <option value="Indígena">Indígena</option>
+              <option value="Prefiro não informar">Prefiro não informar</option>
+            </select>
+          </label>
+          <label>Telefone <span class="muted small">(opcional)</span><input id="phoneInput" type="tel" maxlength="30" placeholder="Ex.: (69) 99999-9999" /></label>
+          <label class="span2">Endereço <span class="muted small">(opcional)</span><input id="addressInput" type="text" maxlength="120" placeholder="Ex.: Rua X, nº Y, Bairro, Cidade/UF" /></label>
+          <label>Altura (cm)<input id="heightInput" type="number" inputmode="numeric" step="1" min="80" max="250" placeholder="Ex.: 175" /></label>
+          <label>Meta (kg)<input id="goalInput" type="number" inputmode="decimal" step="0.1" min="20" max="400" placeholder="Ex.: 80.0" /></label>
+          <label>Nível de atividade
+            <select id="activityInput" class="select">
+              <option value="1.2">Sedentário (1.2)</option>
+              <option value="1.375">Leve (1.375)</option>
+              <option value="1.55" selected>Moderado (1.55)</option>
+              <option value="1.725">Alto (1.725)</option>
+              <option value="1.9">Muito alto (1.9)</option>
+            </select>
+          </label>
+          <label>Opção de treino
+            <select id="trainingStyleInput" class="select">
+              <option value="">—</option>
+              <option value="Musculação">Musculação</option>
+              <option value="Hipertrofia">Hipertrofia</option>
+              <option value="Cardio">Cardio</option>
+              <option value="Misto">Misto</option>
+              <option value="HIIT">HIIT</option>
+            </select>
+          </label>
+
+          <div class="span2">
+            <div class="row between">
+              <div>
+                <div class="label">Dias de treino</div>
+                <div class="muted small">Usado para gerar lembretes.</div>
+              </div>
+            </div>
+            <div class="days" id="daysBox"></div>
+          </div>
+
+          <div class="row span2 wrap">
+            <button id="saveProfileBtn" class="btn secondary" type="submit">Salvar cadastro</button>
+            <button id="exportCsvBtn" class="btn secondary" type="button">Exportar CSV</button>
+            <button id="exportJsonBtn" class="btn secondary" type="button">Backup JSON</button>
+            <button id="importBtn" class="btn secondary" type="button">Importar JSON</button>
+            <input id="importFile" type="file" accept="application/json" class="hidden" />
+          </div>
+          <p class="muted small span2">Dados locais (IndexedDB). “Raça/Cor” é só cadastro e não entra nos cálculos.</p>
+        </form>
+      </div>
     </section>
 
-    <section class="card">
-      <div class="row between">
-        <h2>Histórico</h2>
-        <div class="row wrap">
-          <button id="deleteProfileBtn" class="btn danger" type="button">Apagar perfil</button>
-          <button id="deleteAllBtn" class="btn danger" type="button">Apagar tudo</button>
+    <!-- Tela: Calorias -->
+    <section class="view" id="view-calories" aria-label="Calorias">
+      <div class="card hero">
+        <div class="card-head">
+          <div class="card-title">
+            <span class="i" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2s4 4 4 8a4 4 0 1 1-8 0c0-4 4-8 4-8Zm0 10a2 2 0 0 0 2-2c0-1.33-.88-3.17-2-4.5-1.12 1.33-2 3.17-2 4.5a2 2 0 0 0 2 2Zm6 3c0 3.87-2.69 7-6 7s-6-3.13-6-7c0-2.2 1.1-4.36 2.85-5.93.02 3.27 2.12 5.93 4.15 5.93s4.13-2.66 4.15-5.93C16.9 10.64 18 12.8 18 15Z"/></svg></span>
+            <span>Calorias (estimativa)</span>
+          </div>
+          <span class="muted small">BMR/TDEE + ganhar/perder</span>
+        </div>
+
+        <div class="stats">
+          <div class="stat"><div class="label">BMR (repouso)</div><div class="value" id="bmr">—</div></div>
+          <div class="stat"><div class="label">TDEE (manutenção)</div><div class="value" id="tdee">—</div></div>
+          <div class="stat"><div class="label">Perder ~0,5 kg/sem</div><div class="value" id="cut">—</div></div>
+          <div class="stat"><div class="label">Perder ~0,25 kg/sem</div><div class="value" id="cutLite">—</div></div>
+          <div class="stat"><div class="label">Ganhar ~0,25 kg/sem</div><div class="value" id="bulkLite">—</div></div>
+          <div class="stat"><div class="label">Ganhar ~0,5 kg/sem</div><div class="value" id="bulk">—</div></div>
+        </div>
+        <p class="muted small">Estimativas: Mifflin-St Jeor + fator de atividade. Não é aconselhamento médico.</p>
+      </div>
+    </section>
+
+    <!-- Tela: Alertas -->
+    <section class="view" id="view-reminders" aria-label="Lembretes">
+      <div class="card hero">
+        <div class="card-head">
+          <div class="card-title">
+            <span class="i" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-6V11a7 7 0 1 0-14 0v5l-2 2v1h18v-1Zm-2 1H7v-6a5 5 0 1 1 10 0Z"/></svg></span>
+            <span>Lembretes</span>
+          </div>
+          <span class="muted small">via Google Agenda (.ICS)</span>
+        </div>
+
+        <p class="muted small">No Android, notificações automáticas em PWA podem falhar. Aqui você gera <b>.ICS</b> para importar no Google Agenda com alerta.</p>
+
+        <div class="grid">
+          <label>Horário pesagem (diário)<input id="weighTime" type="time" value="07:00" /></label>
+          <label>Horário treino (dias marcados)<input id="trainTime" type="time" value="18:00" /></label>
+          <div class="row span2 wrap">
+            <button id="icsWeighBtn" class="btn secondary" type="button">Gerar .ICS Pesagem</button>
+            <button id="icsTrainBtn" class="btn secondary" type="button">Gerar .ICS Treino</button>
+          </div>
         </div>
       </div>
-
-      <div id="list" class="list"></div>
     </section>
+
+    <!-- Tela: Histórico -->
+    <section class="view" id="view-history" aria-label="Histórico">
+      <div class="card hero">
+        <div class="card-head">
+          <div class="card-title">
+            <span class="i" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 6h14v2H7V6Zm0 5h14v2H7v-2Zm0 5h14v2H7v-2ZM3 7a1.5 1.5 0 1 0 0 .01V7Zm0 5a1.5 1.5 0 1 0 0 .01V12Zm0 5a1.5 1.5 0 1 0 0 .01V17Z"/></svg></span>
+            <span>Histórico</span>
+          </div>
+          <div class="row wrap">
+            <button id="deleteProfileBtn" class="btn danger" type="button">Apagar perfil</button>
+            <button id="deleteAllBtn" class="btn danger" type="button">Apagar tudo</button>
+          </div>
+        </div>
+
+        <div id="list" class="list"></div>
+      </div>
+    </section>
+
   </main>
 
-  <footer class="footer muted small">
-    Privacidade: dados ficam locais no seu dispositivo. Faça Backup JSON regularmente.
-  </footer>
+  <!-- Barra inferior (ícones estilo celular) -->
+  <nav class="bottomnav" aria-label="Navegação">
+    <button class="tabbtn active" data-tab="entry" type="button">
+      <span class="tabicon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 4h10a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3Zm0 2a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H7Z"/></svg></span>
+      <span class="tabtxt">Registro</span>
+    </button>
+    <button class="tabbtn" data-tab="profile" type="button">
+      <span class="tabicon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Zm0-2a3 3 0 1 1 3-3 3 3 0 0 1-3 3Zm0 4c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Zm-6 5c.56-1.78 3.1-3 6-3s5.44 1.22 6 3Z"/></svg></span>
+      <span class="tabtxt">Perfil</span>
+    </button>
+    <button class="tabbtn" data-tab="calories" type="button">
+      <span class="tabicon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2s4 4 4 8a4 4 0 1 1-8 0c0-4 4-8 4-8Zm0 10a2 2 0 0 0 2-2c0-1.33-.88-3.17-2-4.5-1.12 1.33-2 3.17-2 4.5a2 2 0 0 0 2 2Zm6 3c0 3.87-2.69 7-6 7s-6-3.13-6-7c0-2.2 1.1-4.36 2.85-5.93.02 3.27 2.12 5.93 4.15 5.93s4.13-2.66 4.15-5.93C16.9 10.64 18 12.8 18 15Z"/></svg></span>
+      <span class="tabtxt">Calorias</span>
+    </button>
+    <button class="tabbtn" data-tab="reminders" type="button">
+      <span class="tabicon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-6V11a7 7 0 1 0-14 0v5l-2 2v1h18v-1Zm-2 1H7v-6a5 5 0 1 1 10 0Z"/></svg></span>
+      <span class="tabtxt">Alertas</span>
+    </button>
+    <button class="tabbtn" data-tab="history" type="button">
+      <span class="tabicon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 6h14v2H7V6Zm0 5h14v2H7v-2Zm0 5h14v2H7v-2ZM3 7a1.5 1.5 0 1 0 0 .01V7Zm0 5a1.5 1.5 0 1 0 0 .01V12Zm0 5a1.5 1.5 0 1 0 0 .01V17Z"/></svg></span>
+      <span class="tabtxt">Histórico</span>
+    </button>
+  </nav>
 
-  <!-- modal perfis -->
+  <!-- Modal perfis -->
   <dialog id="profilesDialog" class="dialog">
     <div class="dialogCard">
       <div class="row between">
@@ -321,15 +288,11 @@
         <button id="closeProfilesBtn" class="iconbtn" type="button">Fechar</button>
       </div>
       <p class="muted small">Crie perfis para separar os registros (ex.: você e outra pessoa).</p>
-
       <div class="row wrap">
         <button id="newProfileBtn" class="btn secondary" type="button">Novo perfil</button>
         <button id="renameProfileBtn" class="btn secondary" type="button">Renomear</button>
       </div>
-
-      <div class="muted small" style="margin-top:10px">
-        Para excluir, use “Apagar perfil” (na tela principal) com o perfil selecionado.
-      </div>
+      <div class="muted small" style="margin-top:10px">Para excluir, use “Apagar perfil” (na tela Histórico) com o perfil selecionado.</div>
     </div>
   </dialog>
 
