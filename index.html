@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Controle de Peso</title>
+  <meta name="theme-color" content="#111827" />
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <header class="header">
+    <div>
+      <h1>Controle de Peso</h1>
+      <p class="muted">Offline • Instalável • Backup/Import • Medidas</p>
+    </div>
+    <button id="installBtn" class="btn secondary hidden" type="button">Instalar</button>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>Novo registro</h2>
+
+      <form id="entryForm" class="grid" autocomplete="off">
+        <label>
+          Data
+          <input id="dateInput" type="date" required />
+        </label>
+
+        <label>
+          Peso (kg)
+          <input id="weightInput" type="number" inputmode="decimal" step="0.1" min="20" max="400" placeholder="Ex.: 86.4" required />
+        </label>
+
+        <label>
+          Cintura (cm) <span class="muted small">(opcional)</span>
+          <input id="waistInput" type="number" inputmode="decimal" step="0.1" min="30" max="200" placeholder="Ex.: 92.5" />
+        </label>
+
+        <label>
+          % Gordura <span class="muted small">(opcional)</span>
+          <input id="bfInput" type="number" inputmode="decimal" step="0.1" min="1" max="80" placeholder="Ex.: 18.2" />
+        </label>
+
+        <label class="span2">
+          Observação (opcional)
+          <input id="noteInput" type="text" maxlength="80" placeholder="Ex.: jejum, treino, retenção..." />
+        </label>
+
+        <div class="row span2">
+          <button class="btn" type="submit">Salvar</button>
+          <button id="clearBtn" class="btn secondary" type="button">Limpar</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Configurações & backup</h2>
+
+      <form id="settingsForm" class="grid" autocomplete="off">
+        <label>
+          Altura (cm)
+          <input id="heightInput" type="number" inputmode="numeric" step="1" min="80" max="250" placeholder="Ex.: 175" />
+        </label>
+
+        <label>
+          Meta (kg)
+          <input id="goalInput" type="number" inputmode="decimal" step="0.1" min="20" max="400" placeholder="Ex.: 80.0" />
+        </label>
+
+        <div class="row span2 wrap">
+          <button class="btn secondary" type="submit">Salvar config</button>
+          <button id="exportCsvBtn" class="btn secondary" type="button">Exportar CSV</button>
+          <button id="exportJsonBtn" class="btn secondary" type="button">Backup JSON</button>
+          <button id="importBtn" class="btn secondary" type="button">Importar JSON</button>
+          <input id="importFile" type="file" accept="application/json" class="hidden" />
+        </div>
+        <p class="muted small span2">Backup JSON é o melhor para restaurar tudo depois. CSV é para planilha.</p>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Resumo</h2>
+      <div class="stats" id="stats">
+        <div class="stat">
+          <div class="label">Último peso</div>
+          <div class="value" id="lastWeight">—</div>
+        </div>
+        <div class="stat">
+          <div class="label">Variação</div>
+          <div class="value" id="delta">—</div>
+        </div>
+        <div class="stat">
+          <div class="label">Média 7 dias</div>
+          <div class="value" id="avg7">—</div>
+        </div>
+        <div class="stat">
+          <div class="label">Tendência (7d)</div>
+          <div class="value" id="trend7">—</div>
+        </div>
+        <div class="stat">
+          <div class="label">IMC</div>
+          <div class="value" id="bmi">—</div>
+        </div>
+        <div class="stat">
+          <div class="label">Meta</div>
+          <div class="value" id="goal">—</div>
+        </div>
+        <div class="stat">
+          <div class="label">Falta p/ meta</div>
+          <div class="value" id="toGoal">—</div>
+        </div>
+        <div class="stat">
+          <div class="label">Cintura</div>
+          <div class="value" id="waistLast">—</div>
+        </div>
+        <div class="stat">
+          <div class="label">% Gordura</div>
+          <div class="value" id="bfLast">—</div>
+        </div>
+      </div>
+
+      <canvas id="chart" height="180" aria-label="Gráfico do peso (últimos 60 registros)"></canvas>
+      <p class="muted small">
+        Linhas: <b>Peso</b> + <b>Média móvel 7 dias</b> + <b>Meta</b> (se definida).
+      </p>
+    </section>
+
+    <section class="card">
+      <div class="row between">
+        <h2>Histórico</h2>
+        <button id="deleteAllBtn" class="btn danger" type="button">Apagar tudo</button>
+      </div>
+
+      <div id="list" class="list"></div>
+    </section>
+  </main>
+
+  <footer class="footer muted small">
+    Dados ficam só no seu dispositivo (IndexedDB). Use Backup JSON de tempos em tempos.
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
